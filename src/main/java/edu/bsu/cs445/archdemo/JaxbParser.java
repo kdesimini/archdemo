@@ -6,6 +6,10 @@ import javax.xml.bind.Unmarshaller;
 import java.io.InputStream;
 
 class JaxbParser {
+    static JaxbParser create() {
+        return new JaxbParser();
+    }
+
     ArtifactRecordCollection parse(InputStream input) {
         try {
             JAXBContext context = JAXBContext.newInstance(ArtifactRecordCollection.class);

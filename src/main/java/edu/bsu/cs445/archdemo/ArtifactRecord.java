@@ -12,4 +12,7 @@ class ArtifactRecord {
     @XmlElement(name="Title")
     private String title;
 
+    public String getTitle() {
+        return title;
+    }
 }
