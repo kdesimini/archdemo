@@ -1,9 +1,16 @@
 plugins {
     id 'java'
+    id 'idea'
 }
 
 group 'edu.bsu.cs445'
 version '1.0-SNAPSHOT'
+
+idea {
+    module {
+        name = 'NaiveSearch'
+    }
+}
 
 sourceCompatibility = 1.8
 
