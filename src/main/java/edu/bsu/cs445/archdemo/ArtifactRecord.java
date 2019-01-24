@@ -12,7 +12,13 @@ class ArtifactRecord {
     @XmlElement(name="Title")
     private String title;
 
+    @SuppressWarnings("unused") // Not set in source code, but set through JAXB.
+    @XmlElement(name="Artist")
+    private String artist;
+
     String getTitle() {
         return title;
     }
+
+    String getArtist() { return artist; }
 }

@@ -86,7 +86,8 @@ public class Main extends Application {
         searchField.setDisable(true);
         String searchTerm = searchField.getText();
         List<ArtifactRecord> result = collection.stream()
-                .filter(artifactRecord -> artifactRecord.getTitle().contains(searchTerm))
+                .filter(artifactRecord -> artifactRecord.getTitle().contains(searchTerm)
+                        || artifactRecord.getArtist().contains(searchTerm))
                 .collect(Collectors.toList());
         resultCount.setText(String.valueOf(result.size()));
         searchButton.setDisable(false);
