@@ -18,7 +18,6 @@ class ArtifactRecordCollection {
     @XmlElement(name="record")
     private List<ArtifactRecord> items = Lists.newArrayList();
 
-
     int size() {
         return items.size();
     }
