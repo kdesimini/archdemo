@@ -72,6 +72,7 @@ public class Main extends Application {
         stage.show();
     }
 
+    @SuppressWarnings("unused") // This method is actually used via main.fxml.
     @FXML
     public void search() {
         Preconditions.checkNotNull(collection, "The collection should already be in memory");
