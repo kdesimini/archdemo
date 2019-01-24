@@ -21,6 +21,12 @@ import java.util.stream.Collectors;
 
 public class Main extends Application {
 
+    private static final int WIDTH = 300;
+    private static final int HEIGHT = 275;
+    private static final String PACKAGE_PREFIX = "edu/bsu/cs445/archdemo";
+    private static final String MAIN_FXML_PATH = PACKAGE_PREFIX + "/main.fxml";
+    private static final String LOADING_FXML_PATH = PACKAGE_PREFIX + "/loading.fxml";
+
     @FXML
     @SuppressWarnings("unused") // This field is used by FXML, so suppress the warning
     private TextField searchField;
@@ -43,13 +49,13 @@ public class Main extends Application {
         CompletableFuture.runAsync(() -> collection = parser.parse(owsleyStream))
                 .thenRun(() -> Platform.runLater(() -> {
                             try {
-                                final String mainFxmlPath = "edu/bsu/cs445/archdemo/main.fxml";
+                                final String mainFxmlPath = MAIN_FXML_PATH;
                                 URL url = Thread.currentThread().getContextClassLoader().getResource(mainFxmlPath);
                                 Preconditions.checkNotNull(url, "Cannot load " + mainFxmlPath);
                                 FXMLLoader fxmlLoader = new FXMLLoader(url);
                                 fxmlLoader.setController(Main.this);
                                 Parent root = fxmlLoader.load();
-                                primaryStage.setScene(new Scene(root, 300, 275));
+                                primaryStage.setScene(new Scene(root, WIDTH, HEIGHT));
                             } catch (IOException ioe) {
                                 throw new RuntimeException(ioe);
                             }
@@ -60,13 +66,13 @@ public class Main extends Application {
     private void createInitialScene(Stage stage) {
         Parent root;
         try {
-            URL url = Thread.currentThread().getContextClassLoader().getResource("edu/bsu/cs445/archdemo/loading.fxml");
+            URL url = Thread.currentThread().getContextClassLoader().getResource(LOADING_FXML_PATH);
             Preconditions.checkNotNull(url, "Cannot load fxml resource");
             root = FXMLLoader.load(url);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        Scene scene = new Scene(root, 300, 275);
+        Scene scene = new Scene(root, WIDTH, HEIGHT);
         stage.setTitle("Naive DOMA Search");
         stage.setScene(scene);
         stage.show();
