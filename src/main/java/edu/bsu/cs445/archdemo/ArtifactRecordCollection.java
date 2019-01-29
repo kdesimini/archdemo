@@ -9,13 +9,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 import java.util.stream.Stream;
 
-@XmlRootElement(name="metadata")
+@XmlRootElement(name = "metadata")
 @XmlAccessorType(XmlAccessType.FIELD)
 class ArtifactRecordCollection {
 
     // This item is used by the JAXB parsing but not used in custom code.
-    @SuppressWarnings({"unused","MismatchedQueryAndUpdateOfCollection"})
-    @XmlElement(name="record")
+    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
+    @XmlElement(name = "record")
     private List<ArtifactRecord> items = Lists.newArrayList();
 
     int size() {

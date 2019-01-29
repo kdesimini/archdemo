@@ -5,20 +5,23 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name="record")
+@XmlRootElement(name = "record")
 @XmlAccessorType(XmlAccessType.FIELD)
 class ArtifactRecord {
+
     @SuppressWarnings("unused") // Not set in source code, but set through JAXB.
-    @XmlElement(name="Title")
+    @XmlElement(name = "Title")
     private String title;
 
     @SuppressWarnings("unused") // Not set in source code, but set through JAXB.
-    @XmlElement(name="Artist")
+    @XmlElement(name = "Artist")
     private String artist;
 
     String getTitle() {
         return title;
     }
 
-    String getArtist() { return artist; }
+    String getArtist() {
+        return artist;
+    }
 }

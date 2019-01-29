@@ -14,7 +14,7 @@ class JaxbParser {
         try {
             JAXBContext context = JAXBContext.newInstance(ArtifactRecordCollection.class);
             Unmarshaller unmarshaller = context.createUnmarshaller();
-            return (ArtifactRecordCollection)unmarshaller.unmarshal(input);
+            return (ArtifactRecordCollection) unmarshaller.unmarshal(input);
         } catch (JAXBException e) {
             throw new RuntimeException(e);
         }

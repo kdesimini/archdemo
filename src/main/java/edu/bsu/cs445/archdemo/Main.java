@@ -17,15 +17,18 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
+
 
 public class Main extends Application {
 
     private static final int WIDTH = 300;
     private static final int HEIGHT = 275;
     private static final String PACKAGE_PREFIX = "edu/bsu/cs445/archdemo";
-    private static final String MAIN_FXML_PATH = PACKAGE_PREFIX + "/main.fxml";
+    private static final String MAIN_FXML_PATH = PACKAGE_PREFIX + "/searchPane.fxml";
     private static final String LOADING_FXML_PATH = PACKAGE_PREFIX + "/loading.fxml";
+
+    @SuppressWarnings("unused") //It's not used because in this case we only use it to cause a scene change.
+    private static ArtifactRecordCollection collection;
 
     @FXML
     @SuppressWarnings("unused") // This field is used by FXML, so suppress the warning
@@ -39,28 +42,16 @@ public class Main extends Application {
     @SuppressWarnings("unused") // This field is used by FXML, so suppress the warning
     private Label resultCount;
 
-    private ArtifactRecordCollection collection;
+//    This could be useful if we don't want to create a new collection and use the Main's instance
+//    This makes it hard to test though so I've left this here just in case I need to talk to Dr. G
+//    static ArtifactRecordCollection getCollection() {
+//        return collection;
+//    }
 
     @Override
     public void start(Stage primaryStage) {
         createInitialScene(primaryStage);
-        JaxbParser parser = JaxbParser.create();
-        InputStream owsleyStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("owsley.xml");
-        CompletableFuture.runAsync(() -> collection = parser.parse(owsleyStream))
-                .thenRun(() -> Platform.runLater(() -> {
-                            try {
-                                final String mainFxmlPath = MAIN_FXML_PATH;
-                                URL url = Thread.currentThread().getContextClassLoader().getResource(mainFxmlPath);
-                                Preconditions.checkNotNull(url, "Cannot load " + mainFxmlPath);
-                                FXMLLoader fxmlLoader = new FXMLLoader(url);
-                                fxmlLoader.setController(Main.this);
-                                Parent root = fxmlLoader.load();
-                                primaryStage.setScene(new Scene(root, WIDTH, HEIGHT));
-                            } catch (IOException ioe) {
-                                throw new RuntimeException(ioe);
-                            }
-                        }
-                ));
+        loadSearchPane(primaryStage);
     }
 
     private void createInitialScene(Stage stage) {
@@ -78,19 +69,38 @@ public class Main extends Application {
         stage.show();
     }
 
-    @SuppressWarnings("unused") // This method is actually used via main.fxml.
+    private void loadSearchPane(Stage primaryStage) {
+        JaxbParser parser = JaxbParser.create();
+        InputStream owsleyStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("owsley.xml");
+        CompletableFuture.runAsync(() -> collection = parser.parse(owsleyStream))
+                .thenRun(() -> Platform.runLater(() -> {
+                            try {
+                                final String mainFxmlPath = MAIN_FXML_PATH;
+                                URL url = Thread.currentThread().getContextClassLoader().getResource(mainFxmlPath);
+                                Preconditions.checkNotNull(url, "Cannot load " + mainFxmlPath);
+                                FXMLLoader fxmlLoader = new FXMLLoader(url);
+                                Parent root = fxmlLoader.load();
+                                primaryStage.setScene(new Scene(root, WIDTH, HEIGHT));
+                            } catch (IOException ioe) {
+                                throw new RuntimeException(ioe);
+                            }
+                        }
+                ));
+    }
+
+    @SuppressWarnings("unused") // This method is actually used via searchPane.fxml.
     @FXML
-    public void search() {
-        Preconditions.checkNotNull(collection, "The collection should already be in memory");
-        searchButton.setDisable(true);
-        searchField.setDisable(true);
+    private void searchButtonClicked(){
+        toggleUISearchFieldsDisabled(true);
         String searchTerm = searchField.getText();
-        List<ArtifactRecord> result = collection.stream()
-                .filter(artifactRecord -> artifactRecord.getTitle().contains(searchTerm)
-                        || artifactRecord.getArtist().contains(searchTerm))
-                .collect(Collectors.toList());
+        ArtifactRecordCollectionSearch CollectionSearch = new ArtifactRecordCollectionSearch();
+        List<ArtifactRecord> result = CollectionSearch.search(searchTerm);
         resultCount.setText(String.valueOf(result.size()));
-        searchButton.setDisable(false);
-        searchField.setDisable(false);
+        toggleUISearchFieldsDisabled(false);
+    }
+
+    private void toggleUISearchFieldsDisabled(Boolean theBoolean) {
+        searchButton.setDisable(theBoolean);
+        searchField.setDisable(theBoolean);
     }
 }
